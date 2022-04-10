@@ -1,0 +1,35 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  environment: dev
+  cluster: cluster-name
+
+resources:
+  # Could be repo address to like below
+  #- git@github.com:sahil87/k8s-template//base/teaxr/teaxr-1api?ref=v0.5.2
+  - ./../../../base/teaxr/teaxr-api
+  - resources
+
+patchesStrategicMerge:
+  - overlays/ingress-teaxrapi.yaml
+  - overlays/ingress-z5api.yaml
+
+configMapGenerator:
+  - name: cm-teaxrapi
+    behavior: merge
+    envs: [env-common.env, env-teaxrapi.env]
+
+  - name: cm-z5api
+    behavior: merge
+    envs: [env-common.env, env-z5api.env]
+    files: [configs/env-saml/metadata.xml] #Mount files from configmap like this (see configuration in deployment.yaml)
+
+replicas:
+  - name: deployment-z5api
+    count: 1
+
+#Use a section like to hot deploy any image
+#images:
+#  - name: docker-repo.gmetri.io/z5api
+#    newTag: master-fdbf3c22

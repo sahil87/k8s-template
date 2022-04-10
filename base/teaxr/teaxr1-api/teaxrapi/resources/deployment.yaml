@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-teaxrapi
+spec:
+  replicas: 1
+  #revisionHistoryLimit limits the number of historical revisions visible on / maintained by argocd
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      pod: pod-teaxrapi
+  template:
+    metadata:
+      labels:
+        pod: pod-teaxrapi
+    spec:
+      imagePullSecrets:
+      - name: my-dockerkey
+      containers:
+      - name: pod-teaxrapi
+        image: docker-repo.gmetri.io/teaxrapi:REPLACE_THIS
+        imagePullPolicy: IfNotPresent #IfNotPresent/Always
+        ports:
+        - name: http
+          containerPort: 3666
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: cm-teaxrapi
+        resources:
+          requests:
+            memory: 500Mi
+            cpu: 250m
+          limits:
+            memory: 2000Mi
+            cpu: 1000m
+        startupProbe:
+          httpGet:
+            path: /test
+            port: http
+          initialDelaySeconds: 10
+          failureThreshold: 60 #Fail after failureThreshold*periodSeconds (5 mins) of testing
+          periodSeconds: 5

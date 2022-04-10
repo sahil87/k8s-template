@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-z5api
+spec:
+  replicas: 1
+  #revisionHistoryLimit limits the number of historical revisions visible on / maintained by argocd
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      pod: pod-z5api
+  template:
+    metadata:
+      labels:
+        pod: pod-z5api
+    spec:
+      #Use this volume section create a volume from any configmap
+      volumes:
+      - name: saml #This name is arbitrary - only used to match the volumeMounts section below
+        configMap:
+          name: cm-z5api
+          items:
+            - key: metadata.xml #This key is the name of the file from which this config was read
+              path: metadata.xml #Filename you want in the container
+      imagePullSecrets:
+      - name: my-dockerkey
+      containers:
+      - name: pod-z5api
+        image: docker-repo.gmetri.io/z5api:REPLACE_THIS
+        imagePullPolicy: IfNotPresent #IfNotPresent/Always
+        #Use this volumeMount section to mount the volume created above
+        volumeMounts:
+          - mountPath: /src/dev/saml #Folder in which which you want the config file to be mounted
+            name: saml #Used to match the volume defined above
+        ports:
+        - name: http
+          containerPort: 3777
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: cm-z5api
+        resources:
+          requests:
+            memory: 500Mi
+            cpu: 250m
+          limits:
+            memory: 2000Mi
+            cpu: 1000m
+        startupProbe:
+          httpGet:
+            path: /test
+            port: http
+          initialDelaySeconds: 10
+          failureThreshold: 60 #Fail after failureThreshold*periodSeconds (5 mins) of testing
+          periodSeconds: 5

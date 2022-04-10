@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-z5api
+spec:
+  type: ClusterIP #Options: ClusterIP (default)/NodePort/LoadBalancer/ExternalName
+  ports:
+  - name: http
+    port: 80 #Port on service
+    targetPort: 3777 #Port on pod
+    protocol: TCP
+  selector:
+    pod: pod-z5api

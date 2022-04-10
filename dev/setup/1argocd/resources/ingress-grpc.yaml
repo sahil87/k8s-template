@@ -1,0 +1,27 @@
+#https://argoproj.github.io/argo-cd/operator-manual/ingress/
+#This file contains ingress definition for grpc protocal (what the cli talks to)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-grpc-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port: 
+              name: https
+    host: argocdhostname.gmetri.com
+  tls:
+  - hosts:
+    - argocdhostname.gmetri.com
+    secretName: tls-argocdhostname-gmetri-com

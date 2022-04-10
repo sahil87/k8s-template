@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  project: teaxr-1api
+
+resources:
+  - teaxrapi
+  - z5api
+
+images:
+  - name: repo.gmetri.io/teaxrapi
+    newTag: master-f1367aa9
+  - name: repo.gmetri.io/z5api
+    newTag: master-76367a15
+
+configMapGenerator:
+  - name: cm-teaxrapi
+    behavior: merge
+    envs: [env-common.env, env-teaxrapi.env]
+
+  - name: cm-z5api
+    behavior: merge
+    envs: [env-common.env, env-z5api.env]
+
+replicas:
+  - name: deployment-teaxrapi
+    count: 1
+  - name: deployment-z5api
+    count: 2

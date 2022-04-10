@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-teaxrapi
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service-teaxrapi
+            port: 
+              name: http
+    host: "teaxrapi.replaceprefix.replacecl.gmetri.io"
+  tls:
+  - hosts:
+    - "teaxrapi.replaceprefix.replacecl.gmetri.io"
+    secretName: tls-wildcard

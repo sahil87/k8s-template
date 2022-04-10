@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-z5api
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: "z5api.dev.gmetri.com"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: service-z5api
+            port: 
+              name: http
+  tls:
+  - hosts:
+    - "z5api.dev.gmetri.com"
+    secretName: tls-wildcard-dev-gmetri-com

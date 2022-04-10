@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-teaxrapi
+spec:
+  type: ClusterIP #Options: ClusterIP (default)/NodePort/LoadBalancer/ExternalName
+  ports:
+  - name: http
+    port: 80 #Port on service
+    targetPort: 3666 #Port on pod
+    protocol: TCP
+  selector:
+    pod: pod-teaxrapi
