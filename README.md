@@ -74,7 +74,7 @@ argocd app sync   cert-manager           --async #Needs multiple syncs
 #At this point you should be able to access argocd via argocdhostname.dev.gmetri.com (Defined in setup/1argocd/resources/ingress-http.yaml)
 ```
 
-### ArgoCd command to deploy the apps folder
+### ArgoCd commands to deploy the apps folders
 
 ```sh
 PREFIX=dev; STR_NM="--dest-namespace dev --repo git@github.com:sahil87/k8s-template"
