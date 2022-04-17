@@ -41,6 +41,39 @@ The below assumes that the name of your project (a sizeable collection of apps) 
         * ingress-repo2.yaml
         * ingress-repo3.yaml
 
+### Steps to Deploy ArgoCD
+
+```sh
+CL=dev; #Use Cluster Name in CL
+kubectl config use-context $CL; argocd context $CL;
+
+kubectl create namespace argocd; 
+kustomize build ./dev/setup/1argo/ | kc apply -f -
+
+#Before Ingress Setup:
+kubectl port-forward svc/argocd-server -n argocd 8080:443 #Then go to http://localhost:8080
+argocd login --name ${CL}_local localhost:8080
+argocd context $CL_local
+
+#Setup Required Projects:
+STR_PROJ="--project setup --sync-policy none"
+STR_REPO="--repo git@github.com:sahil87/k8s-template"
+STR_DEF="--revision HEAD --dest-server https://kubernetes.default.svc"
+
+argocd app create setup-2projects        --path dev/setup/setup-2projects        --dest-namespace argocd             $(echo $STR_PROJ $STR_REPO $STR_DEF)
+argocd app create setup-3ingress-nginx   --path dev/setup/setup-3ingress-nginx   --dest-namespace ingress-nginx      $(echo $STR_PROJ $STR_REPO $STR_DEF)
+argocd app create cert-manager           --path dev/setup/setup-4cert-manager    --dest-namespace cert-manager       $(echo $STR_PROJ $STR_REPO $STR_DEF)
+
+argocd app sync   setup-2projects        --async
+argocd app sync   setup-3ingress-nginx   --async
+#After Ingress setup:
+#To get IP address: kubectl get services -n ingress-nginx
+#Find DNS entry for the ingress loadBalancer. Point CNAME (*.).dev.gmetri.com -> output IP address
+argocd app sync   cert-manager           --async #Needs multiple syncs
+
+#At this point you should be able to access argocd via argocdhostname.dev.gmetri.com (Defined in setup/1argocd/resources/ingress-http.yaml)
+```
+
 ### ArgoCd command to deploy the apps folder
 
 ```sh

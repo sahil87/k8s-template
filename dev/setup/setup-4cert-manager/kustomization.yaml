@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  environment: dev
+  cluster: cluster-name
+
+resources:
+- https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
+- resources/issuer-letsencrypt-prod.yaml
+- resources/issuer-letsencrypt-staging.yaml
+- resources/secret-route53-iam.yaml
+- resources/certificate-test.yaml

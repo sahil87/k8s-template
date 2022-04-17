@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+data:
+  #Control hsts individually
+  hsts: "false"
+  #Prevents sending server version in headers (security recommendation)
+  server-tokens: "false"
+  # https://ma.ttias.be/nginx-proxy-upstream-sent-big-header-reading-response-header-upstream/
+  # https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#proxy-buffer-size
+  # If this is left at default (4k) it causes problems with large header response (ex: azure login redirect)
+  proxy-buffer-size: "128k"

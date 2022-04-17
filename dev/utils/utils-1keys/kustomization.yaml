@@ -3,3 +3,4 @@ kind: Kustomization
 
 resources:
 - resources/secret-my-dockerkey
+- resources/certificates.yaml

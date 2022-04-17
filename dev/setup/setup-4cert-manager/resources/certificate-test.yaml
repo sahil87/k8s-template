@@ -1,0 +1,17 @@
+#The certificate needs to be in the same namespace as the user of the certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: certificate-test
+spec:
+  secretName: tls-wildcard-dev-gmetri-com
+  issuerRef:
+    name: letsencrypt-staging
+    #Using letsencrypt-staging as this is only an example certificate request in the cert-manager namespace
+    #The real certificate needs to be requested in the namespace of the ingress
+    #name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: '*.dev.gmetri.com'
+  dnsNames:
+  - "dev.gmetri.com"
+  - "*.dev.gmetri.com"

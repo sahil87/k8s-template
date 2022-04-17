@@ -1,0 +1,26 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: certificate-wildcard-dev-gmetri-com
+spec:
+  secretName: tls-wildcard-dev-gmetri-com
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: '*.dev.gmetri.com'
+  dnsNames:
+  - dev.gmetri.com
+  - '*.dev.gmetri.com'
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: certificate-view-dev-gmetri-com
+spec:
+  secretName: tls-view-dev-gmetri-com
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  # commonName: view.dev.gmetri.com
+  dnsNames:
+  - view.dev.gmetri.com

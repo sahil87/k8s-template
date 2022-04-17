@@ -19,8 +19,8 @@ spec:
             name: argocd-server
             port: 
               name: http
-    host: argocdhostname.gmetri.com
+    host: argocdhostname.dev.gmetri.com
   tls:
   - hosts:
-    - argocdhostname.gmetri.com
-    secretName: tls-argocdhostname-gmetri-com
+    - argocdhostname.dev.gmetri.com
+    secretName: tls-argocdhostname-dev-gmetri-com
