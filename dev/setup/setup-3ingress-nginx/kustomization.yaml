@@ -8,7 +8,10 @@ commonLabels:
 namespace: ingress-nginx
 
 resources:
+  #GCP
   - https://github.com/kubernetes/ingress-nginx.git/deploy/static/provider/cloud?ref=controller-v1.0.0
+  #AWS
+  #https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.2/deploy/static/provider/aws/deploy.yaml
 
 patchesStrategicMerge:
   - overlays/cm.yaml
