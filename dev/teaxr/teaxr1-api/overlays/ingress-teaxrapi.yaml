@@ -4,6 +4,7 @@ metadata:
   name: ingress-teaxrapi
   annotations:
     kubernetes.io/ingress.class: "nginx"
+    # kubernetes.io/tls-acme: "true" #Uncomment to trigger certificate generation via this ingress
 spec:
   rules:
   - host: "teaxrapi.dev.gmetri.com"
